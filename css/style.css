@@ -1,0 +1,450 @@
+:root {
+  --primary: #002b49;
+  --accent: #dc3545;
+  --text: #333;
+  --muted: #6c757d;
+  --surface: #fff;
+  --site-ink: #17364b;
+  --site-navy: #0a3b5d;
+  --site-gold: #e4a126;
+  --site-surface: #f5f8fb;
+}
+
+@font-face {
+  font-family: "Phetsarath OT";
+  src: url("../fonts/Phetsarath-Regular.ttf") format("truetype");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Phetsarath OT";
+  src: url("../fonts/Phetsarath-Bold.ttf") format("truetype");
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  color: var(--text);
+  background: #fff;
+  font-family: "Phetsarath", "Poppins", Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+a {
+  color: var(--primary);
+}
+
+a:hover {
+  color: #005b8f;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+.hero_area {
+  position: relative;
+}
+
+.navbar-brand img {
+  display: block;
+  width: auto;
+  max-width: min(100%, 300px);
+  height: 50px;
+}
+
+.slider_section .detail-box {
+  text-align: left;
+}
+
+.slider_section .btn-box {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  gap: 12px;
+}
+
+.slider_section .btn-box a {
+  display: inline-block;
+  padding: 11px 24px;
+  border-radius: 30px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background-color .2s ease, transform .2s ease;
+}
+
+.slider_section .btn-box a:hover {
+  transform: translateY(-2px);
+}
+
+.slider_section .btn-box .btn1 {
+  color: #fff;
+  background: var(--accent);
+}
+
+.slider_section .btn-box .btn2 {
+  color: var(--primary);
+  background: #fff;
+}
+
+.layout_padding {
+  padding: 70px 0;
+}
+
+.heading_container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.heading_container h2 {
+  margin: 0 0 12px;
+  color: var(--primary);
+  font-size: clamp(1.7rem, 3vw, 2.5rem);
+  font-weight: 700;
+}
+
+.about_section .img-box img,
+.contact_section img {
+  display: block;
+  width: 100%;
+  border-radius: 8px;
+}
+
+.course_section .card-item {
+  height: 100%;
+  overflow: hidden;
+  border-radius: 10px;
+  background: var(--surface);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, .12);
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+
+.course_section .card-item:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 22px rgba(0, 0, 0, .18);
+}
+
+.course_section .card-item .img-box {
+  overflow: hidden;
+}
+
+.course_section .card-item .img-box img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.course_section .card-item .detail-box {
+  padding: 18px;
+  text-align: center;
+}
+
+.course_section .card-item .detail-box h3,
+.course_section .card-item .detail-box h4 {
+  color: var(--primary);
+}
+
+.course_section .card-item .detail-box p {
+  color: #555;
+}
+
+.course_owl-carousel .item {
+  padding: 0 8px 10px;
+}
+
+.owl-theme .owl-dots {
+  margin-top: 12px;
+  text-align: center;
+}
+
+.owl-theme .owl-dot {
+  border: 0;
+  background: transparent;
+}
+
+.owl-theme .owl-dot span {
+  display: block;
+  width: 10px;
+  height: 10px;
+  margin: 5px;
+  border-radius: 50%;
+  background: #bbb;
+}
+
+.owl-theme .owl-dot.active span {
+  background: var(--primary);
+}
+
+.contact_section {
+  color: #fff;
+}
+
+.contact_section a {
+  color: inherit;
+}
+
+.footer_section {
+  text-align: center;
+}
+
+.popup-modal {
+  display: none;
+  position: fixed;
+  z-index: 10000;
+  inset: 0;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(0, 0, 0, .78);
+}
+
+.popup-content {
+  position: relative;
+  width: min(450px, 100%);
+  padding: 16px;
+  border-radius: 12px;
+  background: #fff;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, .4);
+}
+
+.popup-close {
+  position: absolute;
+  top: -12px;
+  right: -12px;
+  width: 34px;
+  height: 34px;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  color: #fff;
+  background: var(--accent);
+  font-size: 24px;
+  line-height: 26px;
+  cursor: pointer;
+}
+
+.popup-poster-img {
+  width: 100%;
+  max-height: 65vh;
+  border-radius: 8px;
+  object-fit: contain;
+}
+
+.social_box a {
+  transition: opacity .2s ease, transform .2s ease;
+}
+
+.social_box a:hover {
+  opacity: .75;
+  transform: translateY(-2px);
+}
+
+body.site-content-page {
+  color: #273b4d;
+  background: var(--site-surface);
+  font-family: Poppins, "Segoe UI", Arial, sans-serif;
+}
+
+body.site-content-page h1,
+body.site-content-page h2,
+body.site-content-page h3,
+body.site-content-page h4,
+body.site-content-page h5,
+body.site-content-page h6 {
+  color: var(--site-ink);
+  font-family: inherit;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+body.site-content-page p,
+body.site-content-page li {
+  line-height: 1.75;
+}
+
+body.site-content-page .container {
+  max-width: 1200px;
+}
+
+body.site-content-page .layout_padding {
+  padding: clamp(48px, 7vw, 88px) 0;
+}
+
+body.site-content-page .heading_container h2 {
+  margin-bottom: 14px;
+  color: var(--site-ink);
+}
+
+body.site-content-page .about_hero_section h1 {
+  color: #fff;
+}
+
+body.site-content-page .about_section .img-box img,
+body.site-content-page .course_section .img-box img,
+body.site-content-page .contact_section .map_container {
+  border-radius: 14px;
+}
+
+body.site-content-page .course_section .box,
+body.site-content-page .course_section .card-item {
+  overflow: hidden;
+  border-radius: 14px;
+  box-shadow: 0 8px 26px rgba(13, 39, 57, .12);
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+
+body.site-content-page .course_section .box:hover,
+body.site-content-page .course_section .card-item:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 14px 32px rgba(13, 39, 57, .17);
+}
+
+body.site-content-page .course_section .detail-box a,
+body.site-content-page .about_section .detail-box > a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 42px;
+  padding: 9px 20px;
+  border-radius: 24px;
+  color: #fff;
+  background: var(--site-navy);
+  font-weight: 600;
+  text-decoration: none;
+  transition: background-color .2s ease, transform .2s ease;
+}
+
+body.site-content-page .course_section .detail-box a:hover,
+body.site-content-page .about_section .detail-box > a:hover {
+  color: #fff;
+  background: #145579;
+  transform: translateY(-1px);
+}
+
+body.site-content-page .info_section,
+body.site-content-page .contact_section {
+  color: #fff !important;
+  background: var(--site-navy) !important;
+}
+
+body.site-content-page .footer_section {
+  padding: 18px 0;
+  color: #dce8ef !important;
+  background: #082f4a !important;
+}
+
+body.site-content-page .footer_section p {
+  margin: 0;
+}
+
+body.site-content-page input:not([type="checkbox"]):not([type="radio"]),
+body.site-content-page select,
+body.site-content-page textarea {
+  border-radius: 8px;
+}
+
+body.site-content-page :focus-visible {
+  outline: 3px solid rgba(228, 161, 38, .8);
+  outline-offset: 3px;
+}
+
+html[lang="la"] body.site-content-page,
+html[lang="la"] body.site-content-page h1,
+html[lang="la"] body.site-content-page h2,
+html[lang="la"] body.site-content-page h3,
+html[lang="la"] body.site-content-page h4,
+html[lang="la"] body.site-content-page h5,
+html[lang="la"] body.site-content-page h6,
+html[lang="la"] body.site-content-page p,
+html[lang="la"] body.site-content-page a,
+html[lang="la"] body.site-content-page button,
+html[lang="la"] body.site-content-page input,
+html[lang="la"] body.site-content-page select,
+html[lang="la"] body.site-content-page textarea,
+html[lang="la"] body.site-content-page li,
+html[lang="la"] body.site-content-page label {
+  font-family: "Phetsarath OT", "Phetsarath", sans-serif !important;
+}
+
+html[lang="ko"] body.site-content-page,
+html[lang="ko"] body.site-content-page h1,
+html[lang="ko"] body.site-content-page h2,
+html[lang="ko"] body.site-content-page h3,
+html[lang="ko"] body.site-content-page h4,
+html[lang="ko"] body.site-content-page h5,
+html[lang="ko"] body.site-content-page h6,
+html[lang="ko"] body.site-content-page p,
+html[lang="ko"] body.site-content-page a,
+html[lang="ko"] body.site-content-page button,
+html[lang="ko"] body.site-content-page input,
+html[lang="ko"] body.site-content-page select,
+html[lang="ko"] body.site-content-page textarea,
+html[lang="ko"] body.site-content-page li,
+html[lang="ko"] body.site-content-page label {
+  font-family: "Malgun Gothic", "Apple SD Gothic Neo", system-ui, sans-serif !important;
+}
+
+html[lang="zh"] body.site-content-page,
+html[lang="zh"] body.site-content-page h1,
+html[lang="zh"] body.site-content-page h2,
+html[lang="zh"] body.site-content-page h3,
+html[lang="zh"] body.site-content-page h4,
+html[lang="zh"] body.site-content-page h5,
+html[lang="zh"] body.site-content-page h6,
+html[lang="zh"] body.site-content-page p,
+html[lang="zh"] body.site-content-page a,
+html[lang="zh"] body.site-content-page button,
+html[lang="zh"] body.site-content-page input,
+html[lang="zh"] body.site-content-page select,
+html[lang="zh"] body.site-content-page textarea,
+html[lang="zh"] body.site-content-page li,
+html[lang="zh"] body.site-content-page label {
+  font-family: "Microsoft YaHei", "PingFang SC", system-ui, sans-serif !important;
+}
+
+@media (max-width: 767.98px) {
+  body.site-content-page .container {
+    max-width: 100%;
+  }
+
+  body.site-content-page .course_section .box:hover,
+  body.site-content-page .course_section .card-item:hover {
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body.site-content-page *,
+  body.site-content-page *::before,
+  body.site-content-page *::after {
+    scroll-behavior: auto !important;
+    transition-duration: .01ms !important;
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}

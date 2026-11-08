@@ -1,0 +1,11 @@
+/config.local.php
+/error_log
+*.log
+*.crdownload
+/uploads/
+/db_test.php
+/db_upload_test.php
+/test_upload.php
+/vendor/
+/node_modules/
+/database/private/

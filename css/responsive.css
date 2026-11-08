@@ -1,0 +1,88 @@
+@media (max-width: 991.98px) {
+  .layout_padding {
+    padding: 55px 0;
+  }
+
+  .slider_section {
+    min-height: 70vh;
+    padding: 140px 0 75px;
+  }
+
+  .slider_section .detail-box h1 {
+    font-size: clamp(2rem, 6vw, 3rem);
+  }
+
+  .custom_nav-container .navbar-collapse {
+    max-height: calc(100vh - 80px);
+    overflow-y: auto;
+    background: #fff;
+  }
+
+  .custom_nav-container .navbar-nav .nav-link {
+    padding: 10px 16px !important;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .layout_padding {
+    padding: 42px 0;
+  }
+
+  .slider_section {
+    min-height: 560px;
+    padding: 130px 0 60px;
+    background-position: 60% center;
+  }
+
+  .slider_section .detail-box {
+    text-align: center;
+  }
+
+  .slider_section .btn-box {
+    justify-content: center;
+  }
+
+  .heading_container {
+    align-items: center;
+    text-align: center;
+  }
+
+  .course_section .card-item .img-box {
+    height: 200px;
+  }
+
+  .contact_section .map_container iframe {
+    min-height: 280px;
+  }
+}
+
+@media (max-width: 575.98px) {
+  body {
+    font-size: 15px;
+  }
+
+  .slider_section {
+    min-height: 520px;
+  }
+
+  .slider_section .detail-box h1 {
+    font-size: 2rem;
+  }
+
+  .slider_section .detail-box p {
+    font-size: 1rem;
+  }
+
+  .slider_section .btn-box a {
+    width: 100%;
+  }
+
+  .course_section .heading_container h2,
+  .heading_container h2 {
+    font-size: 1.8rem !important;
+  }
+
+  .contact_section .pl-lg-5 {
+    padding-left: 15px !important;
+  }
+}

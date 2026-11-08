@@ -1,0 +1,37 @@
+@font-face {
+  font-family: "FontAwesome";
+  src: url("../fonts/fontawesome-webfont.woff2") format("woff2"),
+       url("../fonts/fontawesome-webfont.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
+}
+
+.fa {
+  display: inline-block;
+  font: normal normal normal 14px/1 FontAwesome;
+  font-size: inherit;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+}
+
+.fa-angle-up:before { content: "\f106"; }
+.fa-bars:before { content: "\f0c9"; }
+.fa-bullseye:before { content: "\f140"; }
+.fa-calendar:before { content: "\f073"; }
+.fa-envelope:before { content: "\f0e0"; }
+.fa-eye:before { content: "\f06e"; }
+.fa-facebook:before { content: "\f09a"; }
+.fa-graduation-cap:before { content: "\f19d"; }
+.fa-instagram:before { content: "\f16d"; }
+.fa-linkedin:before { content: "\f0e1"; }
+.fa-map-marker:before { content: "\f041"; }
+.fa-pencil:before { content: "\f040"; }
+.fa-phone:before { content: "\f095"; }
+.fa-plus:before { content: "\f067"; }
+.fa-plus-circle:before { content: "\f055"; }
+.fa-search:before { content: "\f002"; }
+.fa-sign-out:before { content: "\f08b"; }
+.fa-trash:before { content: "\f1f8"; }
+.fa-twitter:before { content: "\f099"; }
+.fa-user:before { content: "\f007"; }

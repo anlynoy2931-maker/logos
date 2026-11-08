@@ -1,0 +1,33 @@
+.slick-slider {
+  position: relative;
+  display: block;
+  box-sizing: border-box;
+  touch-action: pan-y;
+}
+
+.slick-list {
+  display: block;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+}
+
+.slick-track {
+  display: flex;
+  align-items: stretch;
+}
+
+.slick-slide {
+  display: block;
+  min-height: 1px;
+}
+
+.slick-slide img {
+  display: block;
+  max-width: 100%;
+}
+
+.slick-disabled {
+  opacity: .5;
+  pointer-events: none;
+}

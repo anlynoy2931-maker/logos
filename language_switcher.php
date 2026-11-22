@@ -94,7 +94,7 @@ document.addEventListener('DOMContentLoaded', function() {
         zh: '中文'
     };
     const navLabels = {
-        en: ['HOME', 'ABOUT IFL', 'PROGRAMS', 'Activities', 'NEWS', 'RESOURCES'],
+        en: ['HOME', 'ABOUT IFL', 'PROGRAMS', 'Activities', 'NEWS', 'Documents and Regulations'],
         la: ['ໜ້າຫຼັກ', 'ກ່ຽວກັບ', 'ຫຼັກສູດ', 'ກິດຈະກຳ', 'ຂ່າວສານ', 'ເອກະສານ'],
         ko: ['홈', '학교 소개', '교육 과정', '활동', '소식', '자료실'],
         zh: ['首页', '关于我们', '课程', '活动', '新闻', '资料']

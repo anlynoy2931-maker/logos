@@ -406,61 +406,9 @@ include 'header.php';
     </div>
   </div>
 
-  <!-- Info Section -->
-  <section class="info_section" style="background-color: #0b2519; color: #ffffff; padding: 60px 0 30px 0;">
-    <div class="container">
-      <div class="info_top">
-        <div class="row">
-          <div class="col-sm-6 col-md-4 col-lg-3">
-            <div class="info_detail">
-              <a href="index.php">
-                <h4 style="color: #ffffff; font-weight: 700;">Logos institute</h4>
-              </a>
-             
-              <div class="social_box mt-3">
-  <a href="https://www.facebook.com/profile.php?id=100064500650769&locale=th_TH" style="color: #ffffff; margin-right: 10px;"><i class="fa fa-facebook" aria-hidden="true"></i></a>
-  <a href="#" style="color: #ffffff; margin-right: 10px;"><i class="fa fa-twitter" aria-hidden="true"></i></a>
-  <a href="#" style="color: #ffffff; margin-right: 10px;"><i class="fa fa-linkedin" aria-hidden="true"></i></a>
-  <a href="#" style="color: #ffffff; margin-right: 10px;"><i class="fa fa-instagram" aria-hidden="true"></i></a>
-  
-  <a href="#" target="_blank" style="color: #ffffff; display: inline-flex; justify-content: center; align-items: center; width: 40px; height: 40px; border: 1px solid #ffffff; border-radius: 50%; vertical-align: middle;">
-    <svg xmlns="http://www.w3.org/2000/svg" width="19" height="20" fill="currentColor" viewBox="0 0 448 512">
-      <path d="M448 209.91a210.06 210.06 0 0 1-122.77-39.25V349.38A162.55 162.55 0 1 1 185 188.31V258.2a90.08 90.08 0 1 0 57.6 84.45V0h70.36a141.52 141.52 0 0 0 3.73 31.7 140.7 140.7 0 0 0 31.54 57.8 140.06 140.06 0 0 0 53.79 33.6A140.67 140.67 0 0 0 448 128v81.91z"/>
-    </svg>
-  </a>
-</div>
-            </div>
-          </div>
-          <div class="col-sm-6 col-md-4 col-lg-3 mx-auto">
-            <h4 style="color: #ffffff; font-weight: 700; font-size: 1.2rem;">Contact us</h4>
-            <div class="contact_nav mt-3">
-              <p style="margin-bottom: 8px;"><i class="fa fa-map-marker" aria-hidden="true"></i> Location: Phonpanao Road, Vientiane, Laos</p>
-              <p style="margin-bottom: 8px;"><i class="fa fa-phone" aria-hidden="true"></i> Call : +8562092362524</p>
-              <p><i class="fa fa-envelope" aria-hidden="true"></i> Email : logosinstitute.fl.edu@gmail.com</p>
-            </div>
-          </div>
-          <div class="col-md-4">
-            <div class="info_form">
-              <h4 style="color: #ffffff; font-weight: 700; font-size: 1.2rem;">SIGN UP TO OUR NEWSLETTER</h4>
-              <form action="" class="mt-3">
-                <input type="text" placeholder="Enter Your Email" class="form-control mb-2" style="border-radius: 20px;" />
-                <button type="submit" class="btn btn-danger" style="border-radius: 20px; padding: 6px 20px;">Subscribe</button>
-              </form>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
   <!-- Footer Section -->
-  <footer class="footer_section" style="background-color: #ffffff; color: #333333; padding: 15px 0;">
-    <div class="container text-center">
-      <p style="margin: 0; font-size: 0.9rem; color: #555555;">
-        &copy; <?php echo date('Y'); ?> Logos institute
-      </p>
-    </div>
-  </footer>
+  <?php $show_footer_map_contact = true; ?>
+  <?php include __DIR__ . "/footer.php"; ?>
 
   <!-- CDN Scripts -->
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

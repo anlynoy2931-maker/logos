@@ -235,15 +235,7 @@ Over the past decade, South Korea has emerged as a global leader in technology, 
 
 
   <!-- footer section -->
-  <footer class="footer_section">
-    <div class="container">
-      <p>
-        &copy; <span id="displayYear"></span> Logos institute
-		  
-      <!--  <a href="https://html.design/">Free Html Templates</a> -->
-      </p>
-    </div>
-  </footer>
+  <?php include __DIR__ . "/footer.php"; ?>
   <!-- footer section -->
 
 

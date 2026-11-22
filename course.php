@@ -1,6 +1,31 @@
 <?php
 session_start();
 $current_lang = isset($_GET['lang']) && $_GET['lang'] === 'la' ? 'la' : 'en';
+require_once __DIR__ . '/app_config.php';
+require_once __DIR__ . '/site_content_localization.php';
+$conn = null;
+$galleryDatabaseError = false;
+$galleryImages = [];
+try {
+    $databaseConfig = site_config();
+    $conn = new mysqli(
+        $databaseConfig['website_db_host'],
+        $databaseConfig['website_db_username'],
+        $databaseConfig['website_db_password'],
+        $databaseConfig['website_db_name']
+    );
+    $conn->set_charset('utf8mb4');
+    site_ensure_course_gallery_schema($conn);
+
+    $galleryResult = $conn->query('SELECT id, image_path FROM website_course_gallery ORDER BY id');
+    while ($galleryRow = $galleryResult->fetch_assoc()) {
+        $galleryImages[(int) $galleryRow['id']] = $galleryRow['image_path'];
+    }
+} catch (mysqli_sql_exception $exception) {
+    $conn = null;
+    $galleryDatabaseError = true;
+}
+
 $page_text = [
     'en' => [
         'hero_title' => 'Find the program that moves you forward.',
@@ -29,9 +54,10 @@ $page_text = [
         'lao_description' => 'Learn useful Lao step by step, practise real-life conversations, and discover the culture behind the language. The course can be discussed around your current level and learning goals.',
         'learn_in_course' => 'What you can learn',
         'who_for' => 'Who it is for',
-        'ask_course' => 'Ask about the course',
-        'call_us' => 'Call us',
+        'call_us' => 'WhatsApp',
         'lao_gallery' => 'Lao culture and student activities',
+        'edit_gallery' => 'Edit gallery images',
+        'gallery_unavailable' => 'The image database is currently unavailable. Default gallery images are shown, and image editing is temporarily disabled.',
         'gallery_captions' => ['Discover Lao culture and traditions', 'Learn through cultural experiences', 'Connect language with local life'],
         'institute' => 'Logos Institute of Foreign Language',
         'tagline' => 'Learn a language. Open your world.',
@@ -68,9 +94,10 @@ $page_text = [
         'lao_description' => 'ຮຽນພາສາລາວທີລະຂັ້ນ, ຝຶກສົນທະນາຈາກສະຖານະການຈິງ ແລະ ຮຽນຮູ້ວັດທະນະທຳລາວ. ເນື້ອໃນສາມາດປັບໃຫ້ເໝາະກັບລະດັບ ແລະ ເປົ້າໝາຍຂອງຜູ້ຮຽນ',
         'learn_in_course' => 'ສິ່ງທີ່ຈະໄດ້ຮຽນ',
         'who_for' => 'ເໝາະສຳລັບໃຜ',
-        'ask_course' => 'ສອບຖາມຫຼັກສູດ',
-        'call_us' => 'ໂທຫາພວກເຮົາ',
+        'call_us' => 'WhatsApp',
         'lao_gallery' => 'ວັດທະນະທຳລາວ ແລະ ກິດຈະກຳນັກສຶກສາ',
+        'edit_gallery' => 'ແກ້ໄຂຮູບພາບ',
+        'gallery_unavailable' => 'ຖານຂໍ້ມູນຮູບພາບບໍ່ພ້ອມໃຊ້ຊົ່ວຄາວ. ກຳລັງສະແດງຮູບເດີມ ແລະ ປິດການແກ້ໄຂຮູບຊົ່ວຄາວ.',
         'gallery_captions' => ['ຄົ້ນພົບວັດທະນະທຳ ແລະ ປະເພນີລາວ', 'ຮຽນຮູ້ຜ່ານປະສົບການທາງວັດທະນະທຳ', 'ເຊື່ອມໂຍງພາສາກັບຊີວິດປະຈຳວັນ'],
         'institute' => 'ສະຖາບັນໂລໂກສ ພາສາຕ່າງປະເທດ',
         'tagline' => 'ຮຽນຮູ້ພາສາ. ເປີດໂລກຂອງທ່ານ.',
@@ -177,10 +204,17 @@ $special_programs = [
 ];
 
 $lao_gallery = [
-    ['image' => 'images/IMG_5213.jpg', 'alt' => 'Students presenting Lao cultural traditions', 'alt_la' => 'ນັກສຶກສານຳສະເໜີປະເພນີວັດທະນະທຳລາວ'],
-    ['image' => 'images/IMG_5217.jpg', 'alt' => 'Students performing at a cultural event', 'alt_la' => 'ນັກສຶກສາສະແດງໃນງານວັດທະນະທຳ'],
-    ['image' => 'images/IMG_6656.jpg', 'alt' => 'Lao traditional dance performance', 'alt_la' => 'ການສະແດງຟ້ອນລຳປະເພນີລາວ']
+    ['id' => 1, 'image' => 'images/IMG_5213.jpg', 'alt' => 'Students presenting Lao cultural traditions', 'alt_la' => 'ນັກສຶກສານຳສະເໜີປະເພນີວັດທະນະທຳລາວ'],
+    ['id' => 2, 'image' => 'images/IMG_5217.jpg', 'alt' => 'Students performing at a cultural event', 'alt_la' => 'ນັກສຶກສາສະແດງໃນງານວັດທະນະທຳ'],
+    ['id' => 3, 'image' => 'images/IMG_6656.jpg', 'alt' => 'Lao traditional dance performance', 'alt_la' => 'ການສະແດງຟ້ອນລຳປະເພນີລາວ']
 ];
+
+foreach ($lao_gallery as &$photo) {
+    if (isset($galleryImages[$photo['id']])) {
+        $photo['image'] = $galleryImages[$photo['id']];
+    }
+}
+unset($photo);
 
 include __DIR__ . '/header.php';
 ?>
@@ -257,13 +291,14 @@ include __DIR__ . '/header.php';
         text-transform: uppercase;
     }
 
-    .programs-hero h1 {
+    body.site-content-page .programs-hero h1 {
         max-width: 800px;
         margin: 0 0 18px;
         color: #fff;
         font-size: clamp(2.4rem, 5vw, 4.2rem);
         font-weight: 800;
         line-height: 1.12;
+        text-shadow: 0 3px 14px rgba(0, 0, 0, .65);
     }
 
     .programs-hero p {
@@ -602,6 +637,23 @@ include __DIR__ . '/header.php';
         padding: 0 24px 26px;
     }
 
+    .lao-gallery-admin-action {
+        padding: 0 24px 16px;
+        text-align: right;
+    }
+
+    .lao-gallery-admin-action a {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 14px;
+        border: 1px solid var(--program-navy);
+        border-radius: 22px;
+        color: var(--program-navy);
+        font-weight: 700;
+        text-decoration: none;
+    }
+
     .lao-gallery figure {
         overflow: hidden;
         margin: 0;
@@ -852,15 +904,26 @@ include __DIR__ . '/header.php';
                                     <?php endif; ?>
                                 </ul>
                                 <div class="lao-cta">
-                                    <a href="mailto:logosinstitute.fl.edu@gmail.com?subject=Lao%20Language%20Course">
-                                        <i class="fa fa-envelope" aria-hidden="true"></i> <?= $text['ask_course']; ?>
+                                    <a href="https://wa.me/8562092362524" target="_blank" rel="noopener noreferrer">
+                                        <i class="fa fa-whatsapp" aria-hidden="true"></i> <?= $text['call_us']; ?>
                                     </a>
-                                    <a href="tel:+8562092362524"><i class="fa fa-phone" aria-hidden="true"></i> <?= $text['call_us']; ?></a>
                                 </div>
                             </section>
                         </div>
                     </div>
 
+                    <?php if ($galleryDatabaseError): ?>
+                        <p class="lao-gallery-admin-action text-warning" role="status">
+                            <?= htmlspecialchars($text['gallery_unavailable'], ENT_QUOTES, 'UTF-8'); ?>
+                        </p>
+                    <?php endif; ?>
+                    <?php if (!$galleryDatabaseError && isset($_SESSION['admin_logged_in']) && $_SESSION['admin_logged_in'] === true): ?>
+                        <div class="lao-gallery-admin-action">
+                            <a href="manage_course_gallery.php?lang=<?= urlencode($current_lang); ?>">
+                                <i class="fa fa-pencil" aria-hidden="true"></i> <?= $text['edit_gallery']; ?>
+                            </a>
+                        </div>
+                    <?php endif; ?>
                     <div class="lao-gallery" aria-label="<?= $text['lao_gallery']; ?>">
                         <?php foreach ($lao_gallery as $index => $photo): ?>
                             <figure>
@@ -877,38 +940,7 @@ include __DIR__ . '/header.php';
     </div>
 </main>
 
-<footer class="programs-footer">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-7 mb-4">
-                <h2><?= $text['institute']; ?></h2>
-                <p><?= $text['tagline']; ?></p>
-                <div class="programs-footer-map">
-                    <iframe
-                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3794.780105905844!2d102.63083141024914!3d17.98896468512677!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x312467e8718562d9%3A0x6e84fd1e2e235b0e!2sLogos%20Institute%20of%20Foreign%20Language%20(LIFL)!5e0!3m2!1sth!2sla!4v1773388410171!5m2!1sth!2sla"
-                        title="<?= htmlspecialchars($text['directions_title'], ENT_QUOTES, 'UTF-8'); ?>"
-                        loading="lazy"
-                        referrerpolicy="no-referrer-when-downgrade"
-                        allowfullscreen>
-                    </iframe>
-                </div>
-                <p class="mt-3 mb-0">
-                    <a href="https://www.google.com/maps/search/?api=1&amp;query=Logos+Institute+of+Foreign+Language+Vientiane+Laos"
-                       target="_blank" rel="noopener noreferrer">
-                        <?= $text['open_maps']; ?> <i class="fa fa-arrow-right" aria-hidden="true"></i>
-                    </a>
-                </p>
-            </div>
-            <div class="col-lg-5 mb-4">
-                <h2><?= $text['contact_admissions']; ?></h2>
-                <p><i class="fa fa-map-marker" aria-hidden="true"></i> <?= $text['address']; ?></p>
-                <p><i class="fa fa-phone" aria-hidden="true"></i> <a href="tel:+8562092362524">+856 20 9236 2524</a></p>
-                <p><i class="fa fa-envelope" aria-hidden="true"></i> <a href="mailto:logosinstitute.fl.edu@gmail.com">logosinstitute.fl.edu@gmail.com</a></p>
-            </div>
-        </div>
-        <div class="programs-footer-bottom">&copy; <?= date('Y'); ?> <?= $text['copyright']; ?></div>
-    </div>
-</footer>
+<?php include __DIR__ . "/footer.php"; ?>
 
 <script>
 document.addEventListener("DOMContentLoaded", function() {

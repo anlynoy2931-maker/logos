@@ -335,7 +335,7 @@ if ($currentPage === 'about.php') {
                 <li class="nav-item<?php echo $activePage === 'programs' ? ' active' : ''; ?>"><a class="nav-link" href="course.php">PROGRAMS</a></li>
                 <li class="nav-item<?php echo $activePage === 'activities' ? ' active' : ''; ?>"><a class="nav-link" href="Activities.php">Activities</a></li>
                 <li class="nav-item<?php echo $activePage === 'news' ? ' active' : ''; ?>"><a class="nav-link" href="NEWS.php">NEWS</a></li>
-                <li class="nav-item<?php echo $activePage === 'documents' ? ' active' : ''; ?>"><a class="nav-link" href="Regulations.php">RESOURCES</a></li>
+                <li class="nav-item<?php echo $activePage === 'documents' ? ' active' : ''; ?>"><a class="nav-link" href="Regulations.php">Documents and Regulations</a></li>
             </ul>
         </nav>
 

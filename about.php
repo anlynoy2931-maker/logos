@@ -127,61 +127,9 @@ include 'header.php';
     </div>
   </section>
 
-  <!-- Contact Section (ຄົງຮູບແບບດຽວກັນກັບໜ້າ Index) -->
-  <section class="contact_section layout_padding" style="background-color: #0b2519; color: #ffffff; padding: 70px 0;">
-    <div class="container">
-      <div class="heading_container text-center mb-5">
-        <h2 style="color: #ffffff; font-weight: 700;"><?php echo htmlspecialchars($about['map_title'], ENT_QUOTES, 'UTF-8'); ?></h2>
-      </div>
-
-      <div class="row align-items-center">
-        <div class="col-md-6 mb-4 mb-md-0">
-          <div class="map_container" style="border-radius: 10px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.3);">
-            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3794.780105905844!2d102.63083141024914!3d17.98896468512677!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x312467e8718562d9%3A0x6e84fd1e2e235b0e!2sLogos%20Institute%20of%20Foreign%20Language%20(LIFL)!5e0!3m2!1sth!2sla!4v1773388410171!5m2!1sth!2sla" width="100%" height="320" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
-          </div>
-        </div>
-
-        <div class="col-md-6 pl-lg-5">
-          <div class="contact_info">
-            <h3 style="font-weight: 700; font-size: 1.5rem; margin-bottom: 20px; color: #ffffff;">
-              <?php echo htmlspecialchars($about['contact_title'], ENT_QUOTES, 'UTF-8'); ?>
-            </h3>
-
-            <div class="d-flex align-items-start mb-3">
-              <i class="fa fa-map-marker" aria-hidden="true" style="font-size: 1.5rem; margin-right: 15px; width: 20px; text-align: center; color: #ffffff;"></i>
-              <div>
-                <strong style="display: block;"><?php echo htmlspecialchars($about['location'], ENT_QUOTES, 'UTF-8'); ?></strong>
-                <span><?php echo htmlspecialchars($about['address'], ENT_QUOTES, 'UTF-8'); ?></span>
-              </div>
-            </div>
-
-            <div class="d-flex align-items-center mb-3">
-              <i class="fa fa-phone" aria-hidden="true" style="font-size: 1.3rem; margin-right: 15px; width: 20px; text-align: center; color: #ffffff;"></i>
-              <div>
-                <span><?php echo htmlspecialchars($about['phone'], ENT_QUOTES, 'UTF-8'); ?></span>
-              </div>
-            </div>
-
-            <div class="d-flex align-items-center mb-4">
-              <i class="fa fa-envelope" aria-hidden="true" style="font-size: 1.2rem; margin-right: 15px; width: 20px; text-align: center; color: #ffffff;"></i>
-              <div>
-                <span><?php echo htmlspecialchars($about['email'], ENT_QUOTES, 'UTF-8'); ?></span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
   <!-- Footer Section -->
-  <footer class="footer_section" style="background-color: #ffffff; color: #333333; padding: 15px 0;">
-    <div class="container text-center">
-      <p style="margin: 0; font-size: 0.9rem; color: #555555;">
-        &copy; <?php echo date('Y'); ?> <?php echo htmlspecialchars($about['copyright'], ENT_QUOTES, 'UTF-8'); ?>
-      </p>
-    </div>
-  </footer>
+  <?php $show_footer_map_contact = true; ?>
+  <?php include __DIR__ . "/footer.php"; ?>
 
   <!-- CDN Scripts -->
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

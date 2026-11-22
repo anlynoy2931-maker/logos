@@ -133,9 +133,7 @@ $courseContent = site_localized_value($course, 'full_content', $current_lang);
     </div>
 
     <!-- Footer -->
-    <footer class="footer_section bg-dark text-white text-center py-3">
-        <p class="mb-0">&copy; <?= date('Y'); ?> Logos Institute. All Rights Reserved.</p>
-    </footer>
+    <?php include __DIR__ . "/footer.php"; ?>
 
 </body>
 </html>

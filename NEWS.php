@@ -204,3 +204,6 @@ include 'header.php';
 // ເອີ້ນໃຊ້ Footer ກາງ
 include 'footer.php'; 
 ?>
+
+</body>
+</html>

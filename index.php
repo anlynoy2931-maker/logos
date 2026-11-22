@@ -18,20 +18,36 @@ if ($conn->connect_error) {
 $conn->set_charset("utf8mb4");
 
 site_ensure_multilingual_content_schema($conn);
+site_ensure_holiday_notice_schema($conn);
+$holidayNoticeResult = $conn->query("SELECT * FROM website_holiday_notice WHERE id = 1");
+$holidayNotice = $holidayNoticeResult->fetch_assoc();
+$holidayNoticeTitle = $holidayNotice['title_' . $current_lang] ?: $holidayNotice['title_en'];
+$holidayNoticeBody = $holidayNotice['body_' . $current_lang] ?: $holidayNotice['body_en'];
+$holidayNoticeImages = array_values(array_filter([
+    $holidayNotice['image_one'],
+    $holidayNotice['image_two'],
+]));
 
-// --- 2. ດຶງຂໍ້ມູນ dynamic ຈາກຕາຕະລາງ website_courses (Curriculum) ---
-$sql = "SELECT * FROM website_courses";
-$result = $conn->query($sql);
-
-$curriculums = [];
-if ($result && $result->num_rows > 0) {
-    while ($row = $result->fetch_assoc()) {
-        $row['title'] = site_localized_value($row, 'course_name', $current_lang);
-        $row['description'] = site_localized_value($row, 'description', $current_lang);
-        $row['link'] = $row['detail_link'];
-        $curriculums[] = $row;
-    }
-}
+$curriculums = [
+    [
+        'title' => 'Bachelor’s degrees',
+        'description' => 'Bachelor programs in English, Korean, Chinese, and AI Computer Science.',
+        'image' => 'images/englishS (1).jpg',
+        'link' => 'course.php#bachelor-programs',
+    ],
+    [
+        'title' => 'Special supplementary courses',
+        'description' => 'Practical, goal-focused learning for communication and language-test preparation.',
+        'image' => 'images/KoreanS1.jpg',
+        'link' => 'course.php#special-programs',
+    ],
+    [
+        'title' => 'Lao for international learners',
+        'description' => 'Learn useful Lao step by step, practise real-life conversations, and discover the culture behind the language. A welcoming course for international residents, visitors, and anyone curious about Laos.',
+        'image' => 'images/IMG_5213.jpg',
+        'link' => 'course.php#lao-language',
+    ],
+];
 
 // --- 3. ດຶງຂໍ້ມູນ dynamic ຈາກຕາຕະລາງ website_activities (Activities) ---
 $sql_act = "SELECT * FROM website_activities ORDER BY id DESC";
@@ -42,10 +58,42 @@ if ($result_act && $result_act->num_rows > 0) {
     while ($row_act = $result_act->fetch_assoc()) {
         $row_act['title'] = site_localized_value($row_act, 'title', $current_lang);
         $row_act['description'] = site_localized_value($row_act, 'description', $current_lang);
-        $row_act['link'] = $row_act['detail_link'];
         $activities[] = $row_act;
     }
 }
+
+$activity_highlights = [
+    [
+        'title' => 'Students performing on stage',
+        'image' => 'images/Activities 1 (1).jpg',
+    ],
+    [
+        'title' => 'Students performing at a Logos festival',
+        'image' => 'images/activities 2.jpg',
+    ],
+    [
+        'title' => 'Students in a stage performance',
+        'image' => 'images/activities 3.jpg',
+    ],
+    [
+        'title' => 'Logos football team',
+        'image' => 'images/activities 4.jpg',
+    ],
+    [
+        'title' => 'Lao cultural event',
+        'image' => 'images/IMG_5213.jpg',
+    ],
+    [
+        'title' => 'Students performing Lao culture',
+        'image' => 'images/IMG_5217.jpg',
+    ],
+    [
+        'title' => 'Traditional Lao dance',
+        'image' => 'images/IMG_6656.jpg',
+    ],
+];
+
+$activity_cards = !empty($activities) ? $activities : $activity_highlights;
 
 // --- 📌 ເອີ້ນໃຊ້ Header ກາງທີ່ເຮົາສ້າງຂຶ້ນ ---
 include 'header.php';
@@ -77,27 +125,43 @@ include 'header.php';
 </section>
 </div>
 
-<!-- Festival Section -->
+<!-- Holiday Announcement Section -->
 <section class="about_section layout_padding">
     <div class="container">
         <div class="row">
             <div class="col-md-6">
                 <div class="img-box">
-                    <a href="#posterModal" onclick="openPosterModal(event)" aria-label="View festival poster">
-                        <img src="images/Festival 7-02.png" alt="Festival" class="img-fluid">
-                    </a>
+                    <button type="button" class="holiday-notice-preview" onclick="openHolidayNoticeModal()"
+                        aria-label="View holiday announcement">
+                        <?php if (!empty($holidayNoticeImages)): ?>
+                            <?php foreach ($holidayNoticeImages as $image): ?>
+                            <img src="<?= htmlspecialchars($image, ENT_QUOTES, 'UTF-8'); ?>"
+                                alt="<?= htmlspecialchars($holidayNoticeTitle, ENT_QUOTES, 'UTF-8'); ?>"
+                                class="img-fluid">
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <span class="holiday-notice-placeholder" aria-hidden="true">
+                                <i class="fa fa-calendar" aria-hidden="true"></i>
+                            </span>
+                        <?php endif; ?>
+                    </button>
                 </div>
             </div>
             <div class="col-md-6">
                 <div class="detail-box">
                     <div class="heading_container">
-                        <h2>LOGOS festival 2026</h2>
+                        <h2><?= htmlspecialchars($holidayNoticeTitle, ENT_QUOTES, 'UTF-8'); ?></h2>
                     </div>
-                    <p>
-                        ບຸນມະໂຫລານໂລໂກສແມ່ນຈັດຂຶ້ນເພື່ອເປັນ ພິທີສະເຫຼີມສະຫຼອງວັນຄົບຮອບສະຖານການສຶກສາ ໂລໂກສ
-                        ເລີ່ມຈັດຕັ້ງປະຕິບັດຢ່າງເປັນຮູບປະທໍາຕັ້ງແຕ່ ປີ 2016 ເປັນຕົ້ນມາ...
-                    </p>
-                    <a href="Festival.php">Read More</a>
+                    <p><?= nl2br(htmlspecialchars($holidayNoticeBody, ENT_QUOTES, 'UTF-8')); ?></p>
+                    <button type="button" class="btn btn-primary" onclick="openHolidayNoticeModal()">
+                        <?= $current_lang === 'la' ? 'ເບິ່ງປະກາດ' : ($current_lang === 'ko' ? '공지 보기' : ($current_lang === 'zh' ? '查看通知' : 'View announcement')); ?>
+                    </button>
+                    <?php if (isset($_SESSION['admin_logged_in']) && $_SESSION['admin_logged_in'] === true): ?>
+                    <a class="btn btn-outline-primary ml-2"
+                        href="manage_holiday_notice.php?lang=<?= urlencode($current_lang); ?>">
+                        <?= $current_lang === 'la' ? 'ແກ້ໄຂປະກາດ' : ($current_lang === 'ko' ? '공지 수정' : ($current_lang === 'zh' ? '编辑通知' : 'Edit announcement')); ?>
+                    </a>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
@@ -129,7 +193,15 @@ include 'header.php';
                         <h2>Who We Are</h2>
                     </div>
                     <p>
-                        Logos Institute was originally established in 2001 as the Logos Academy Center...
+                        Logos Institute was originally established in 2001 as the Logos Academy Center. Initially, it
+                        offered continuing education and short-term training programs in English, Korean, and Computer
+                        Science.
+                    </p>
+                    <p>
+                        In 2014, Logos Academy Center was officially upgraded to Logos College. Subsequently, in 2021,
+                        it was elevated to the Logos Institute of Foreign Languages. By 2023, the institution achieved
+                        full accreditation as a comprehensive institute, recognized by the Ministry of Education and
+                        Sports.
                     </p>
                     <a href="about.php">Read More</a>
                 </div>
@@ -149,150 +221,278 @@ include 'header.php';
                 Curriculum
             </h2>
             <p style="font-size: 1rem; margin-top: 10px; color: #e0e0e0; text-align: center;">
-                ຫຼັກສູດການສຶກສາປະລິນຍາຕີ ຂອງສະຖາບັນ ໂລໂກສ
+                ພວກເຮົາມີຫຼັກສູດຫຼັກ 3 ປະເພດ: ຫຼັກສູດປະລິນຍາຕີ, ຫຼັກສູດພາສາພິເສດ ຫຼື ຫຼັກສູດບຳລຸງ, ແລະ ຫຼັກສູດພາສາລາວສຳລັບຜູ້ຮຽນຕ່າງປະເທດ.
             </p>
 
-            <?php if (isset($_SESSION['admin_logged_in']) && $_SESSION['admin_logged_in'] === true): ?>
-            <div class="mt-3 text-center">
-                <a href="add_course.php" class="btn btn-success"
-                    style="border-radius: 20px; padding: 8px 20px; box-shadow: 0 4px 10px rgba(40, 167, 69, 0.3);">
-                    <i class="fa fa-plus"></i> ເພີ່ມຫຼັກສູດໃໝ່ (Add New Course)
-                </a>
-            </div>
+        </div>
+
+        <div class="activities-grid">
+            <?php if (!empty($curriculums)): ?>
+            <?php foreach ($curriculums as $item): ?>
+            <article class="activity-feature-card">
+                <div class="activity-feature-image">
+                    <img src="<?= htmlspecialchars($item['image'], ENT_QUOTES, 'UTF-8'); ?>"
+                        alt="<?= htmlspecialchars($item['title'], ENT_QUOTES, 'UTF-8'); ?>" loading="lazy">
+                </div>
+            </article>
+            <?php endforeach; ?>
             <?php endif; ?>
         </div>
 
-        <div class="row">
-            <?php if (!empty($curriculums)): ?>
-            <?php foreach ($curriculums as $item): ?>
-            <div class="col-lg-3 col-md-6 col-sm-12 mb-4">
-                <div class="card-item shadow-lg"
-                    style="position: relative; background: rgba(255, 255, 255, 0.95); border-radius: 12px; overflow: hidden; height: 100%; display: flex; flex-direction: column; backdrop-filter: blur(5px);">
-
-                    <?php if (isset($_SESSION['admin_logged_in']) && $_SESSION['admin_logged_in'] === true): ?>
-                    <div style="position: absolute; top: 10px; right: 10px; z-index: 10;"
-                        class="btn-group btn-group-sm">
-                        <a href="edit_course.php?id=<?= $item['id']; ?>" class="btn btn-warning" title="ແກ້ໄຂ">
-                            <i class="fa fa-pencil"></i>
-                        </a>
-                        <a href="delete_course.php?id=<?= $item['id']; ?>" class="btn btn-danger"
-                            onclick="return confirm('ທ່ານຕ້ອງການລົບຫຼັກສູດນີ້ແທ້ບໍ?');" title="ລົບ">
-                            <i class="fa fa-trash"></i>
-                        </a>
-                    </div>
-                    <?php endif; ?>
-
-                    <div class="img-box" style="height: 180px; width: 100%; overflow: hidden;">
-                        <img src="<?= htmlspecialchars($item['image']); ?>"
-                            alt="<?= htmlspecialchars($item['title']); ?>"
-                            style="width: 100%; height: 100%; object-fit: cover;">
-                    </div>
-
-                    <div class="detail-box p-3 text-center"
-                        style="flex: 1; display: flex; flex-direction: column; justify-content: space-between;">
-                        <div>
-                            <h4
-                                style="font-size: 1.1rem; font-weight: 600; color: #002b49; margin-bottom: 10px; min-height: 2.6rem; display: flex; align-items: center; justify-content: center;">
-                                <?= htmlspecialchars($item['title']); ?>
-                            </h4>
-                            <p
-                                style="font-size: 0.88rem; color: #555; height: 3.6rem; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; margin-bottom: 15px;">
-                                <?= htmlspecialchars($item['description']); ?>
-                            </p>
-                        </div>
-                        <div>
-                            <a href="<?= htmlspecialchars($item['link']); ?>" class="btn btn-primary btn-sm"
-                                style="background-color: #002b49; border: none; border-radius: 20px; padding: 6px 20px;">
-                                View Detail
-                            </a>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-            <?php endforeach; ?>
-            <?php else: ?>
-            <div class="col-12 text-center py-4">
-                <p class="text-white">ບໍ່ມີຂໍ້ມູນຫຼັກສູດໃນຂະນະນີ້</p>
-            </div>
-            <?php endif; ?>
+        <div class="activities-more-action">
+            <a class="activities-more-link" href="course.php?lang=<?= urlencode($current_lang); ?>">
+                Read More <i class="fa fa-arrow-right" aria-hidden="true"></i>
+            </a>
         </div>
 
     </div>
 </section>
 
+<style>
+.logos-activities-section {
+    position: relative;
+    overflow: hidden;
+    padding: 88px 0 72px;
+    background: linear-gradient(135deg, #061d31 0%, #0b4261 58%, #0d5d78 100%);
+}
+
+.logos-activities-section::before,
+.logos-activities-section::after {
+    position: absolute;
+    width: 340px;
+    height: 340px;
+    border: 1px solid rgba(255, 255, 255, .1);
+    border-radius: 50%;
+    content: "";
+    pointer-events: none;
+}
+
+.logos-activities-section::before {
+    top: -190px;
+    left: -100px;
+    box-shadow: 0 0 0 35px rgba(255, 255, 255, .025), 0 0 0 70px rgba(255, 255, 255, .02);
+}
+
+.logos-activities-section::after {
+    right: -170px;
+    bottom: -240px;
+    box-shadow: 0 0 0 35px rgba(255, 255, 255, .025), 0 0 0 70px rgba(255, 255, 255, .02);
+}
+
+.logos-activities-section .container {
+    position: relative;
+    z-index: 1;
+}
+
+.activities-heading {
+    max-width: 760px;
+    margin: 0 auto 42px;
+    text-align: center;
+}
+
+.activities-eyebrow {
+    display: inline-block;
+    margin-bottom: 12px;
+    color: #ffd27a;
+    font-size: .78rem;
+    font-weight: 800;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+}
+
+.activities-heading h2 {
+    margin: 0 0 14px;
+    color: #fff !important;
+    font-size: clamp(2.5rem, 5vw, 3.8rem);
+    font-weight: 900;
+    letter-spacing: .02em;
+    line-height: 1.2;
+    text-shadow: 0 3px 14px rgba(0, 0, 0, .65);
+}
+
+.activities-heading h2::after {
+    display: block;
+    width: 76px;
+    height: 4px;
+    margin: 16px auto 0;
+    border-radius: 4px;
+    background: #ffd27a;
+    content: "";
+}
+
+.activities-heading p {
+    margin: 0;
+    color: #f4f9fc !important;
+    font-size: 1.08rem;
+    font-weight: 500;
+    line-height: 1.75;
+    text-shadow: 0 1px 5px rgba(0, 0, 0, .45);
+}
+
+.activities-admin-action {
+    margin-top: 22px;
+}
+
+.activities-admin-action a {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 18px;
+    border: 1px solid rgba(255, 255, 255, .55);
+    border-radius: 24px;
+    color: #fff;
+    font-weight: 700;
+    text-decoration: none;
+    transition: background .2s ease, color .2s ease;
+}
+
+.activities-admin-action a:hover {
+    color: #082d49;
+    background: #ffd27a;
+    border-color: #ffd27a;
+}
+
+.activities-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 24px;
+}
+
+.activities-more-action {
+    margin-top: 32px;
+    text-align: center;
+}
+
+.activities-more-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    padding: 11px 22px;
+    border: 1px solid #ffd27a;
+    border-radius: 24px;
+    color: #082d49;
+    background: #ffd27a;
+    font-weight: 800;
+    text-decoration: none;
+    transition: color .2s ease, background .2s ease, transform .2s ease;
+}
+
+.activities-more-link:hover {
+    color: #fff;
+    background: #0c5077;
+    text-decoration: none;
+    transform: translateY(-2px);
+}
+
+.activity-feature-card {
+    position: relative;
+    height: 270px;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, .16);
+    border-radius: 18px;
+    background: #092a43;
+    box-shadow: 0 18px 42px rgba(0, 0, 0, .2);
+    transition: transform .25s ease, box-shadow .25s ease;
+}
+
+.activity-feature-card:hover {
+    transform: translateY(-7px);
+    box-shadow: 0 24px 48px rgba(0, 0, 0, .3);
+}
+
+.activity-feature-image {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    background: #dce7ee;
+}
+
+.activity-feature-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform .45s ease;
+}
+
+.activity-feature-card:hover .activity-feature-image img {
+    transform: scale(1.05);
+}
+
+.activity-admin-controls {
+    position: absolute;
+    z-index: 2;
+    top: 12px;
+    right: 12px;
+}
+
+@media (max-width: 767.98px) {
+    .logos-activities-section {
+        padding: 64px 0 48px;
+    }
+
+    .activities-heading {
+        margin-bottom: 30px;
+    }
+
+    .activity-feature-card {
+        height: 250px;
+    }
+}
+
+@media (max-width: 991.98px) {
+    .activities-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 575.98px) {
+    .activities-grid {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+
 <!-- Activities section start -->
-<section class="course_section layout_padding">
+<section class="logos-activities-section" aria-labelledby="logos-activities-title">
     <div class="container">
-        <div class="heading_container text-center mb-4" style="align-items: center; text-align: center;">
-            <h2
-                style="font-weight: 800; color: #002b49; text-transform: uppercase; font-size: 2.8rem; letter-spacing: 2px; margin: 0 auto; text-align: center;">
-                Logos Activities
-            </h2>
-
-            <p class="text-muted" style="font-size: 0.95rem; margin-top: 10px; text-align: center;">
-                ກິດຈະກຳ ແລະ ສະໂມສອນຕ່າງໆ ຂອງສະຖາບັນ ໂລໂກສ
-            </p>
-
+        <div class="activities-heading">
+            <span class="activities-eyebrow">Campus life</span>
+            <h2 id="logos-activities-title">Logos Activities</h2>
+            <p>Explore the vibrant campus life and exciting student activities at Logos Institute of Foreign Language.</p>
             <?php if (isset($_SESSION['admin_logged_in']) && $_SESSION['admin_logged_in'] === true): ?>
-            <div class="mt-3 text-center">
-                <a href="add_activity.php" class="btn btn-success"
-                    style="border-radius: 20px; padding: 8px 20px; box-shadow: 0 4px 10px rgba(40, 167, 69, 0.3);">
-                    <i class="fa fa-plus"></i> ເພີ່ມກິດຈະກຳໃໝ່ (Add Activity)
-                </a>
+            <div class="activities-admin-action">
+                <a href="add_activity.php"><i class="fa fa-plus" aria-hidden="true"></i> ເພີ່ມກິດຈະກຳໃໝ່ (Add Activity)</a>
             </div>
             <?php endif; ?>
         </div>
 
-        <div class="course_owl-carousel owl-carousel owl-theme">
-            <?php if (!empty($activities)): ?>
-            <?php foreach ($activities as $act): ?>
-            <div class="item">
-                <div class="card-item shadow-sm"
-                    style="position: relative; background: #fff; border-radius: 10px; overflow: hidden; margin-bottom: 15px;">
-
-                    <?php if (isset($_SESSION['admin_logged_in']) && $_SESSION['admin_logged_in'] === true): ?>
-                    <div style="position: absolute; top: 10px; right: 10px; z-index: 10;"
-                        class="btn-group btn-group-sm">
-                        <a href="edit_activity.php?id=<?= $act['id']; ?>" class="btn btn-warning" title="ແກ້ໄຂ">
-                            <i class="fa fa-pencil"></i>
-                        </a>
-                        <a href="delete_activity.php?id=<?= $act['id']; ?>" class="btn btn-danger"
-                            onclick="return confirm('ທ່ານຕ້ອງການລົບກິດຈະກຳນີ້ແທ້ບໍ?');" title="ລົບ">
-                            <i class="fa fa-trash"></i>
-                        </a>
-                    </div>
-                    <?php endif; ?>
-
-                    <div class="img-box" style="height: 200px; overflow: hidden;">
-                        <img src="<?= htmlspecialchars($act['image']); ?>" alt="<?= htmlspecialchars($act['title']); ?>"
-                            style="width: 100%; height: 100%; object-fit: cover;">
-                    </div>
-
-                    <div class="detail-box p-3 text-center">
-                        <h4
-                            style="font-size: 1.15rem; font-weight: 600; color: #002b49; margin-bottom: 10px; min-height: 2.5rem; display: flex; align-items: center; justify-content: center;">
-                            <?= htmlspecialchars($act['title']); ?>
-                        </h4>
-                        <p
-                            style="font-size: 0.88rem; color: #666; height: 3.6rem; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; margin-bottom: 15px;">
-                            <?= htmlspecialchars($act['description']); ?>
-                        </p>
-                        <a href="<?= !empty($act['link']) ? htmlspecialchars($act['link']) : 'updating.php'; ?>"
-                            class="btn btn-primary btn-sm"
-                            style="background-color: #002b49; border: none; border-radius: 20px; padding: 6px 20px;">
-                            View Detail
-                        </a>
-                    </div>
-
+        <div class="activities-grid">
+            <?php foreach ($activity_cards as $act): ?>
+            <article class="activity-feature-card">
+                <?php if (isset($act['id'], $_SESSION['admin_logged_in']) && $_SESSION['admin_logged_in'] === true): ?>
+                <div class="activity-admin-controls btn-group btn-group-sm">
+                    <a href="edit_activity.php?id=<?= htmlspecialchars((string) $act['id'], ENT_QUOTES, 'UTF-8'); ?>"
+                        class="btn btn-warning" title="ແກ້ໄຂ">
+                        <i class="fa fa-pencil" aria-hidden="true"></i>
+                    </a>
+                    <a href="delete_activity.php?id=<?= htmlspecialchars((string) $act['id'], ENT_QUOTES, 'UTF-8'); ?>"
+                        class="btn btn-danger"
+                        onclick="return confirm('ທ່ານຕ້ອງການລົບກິດຈະກຳນີ້ແທ້ບໍ?');" title="ລົບ">
+                        <i class="fa fa-trash" aria-hidden="true"></i>
+                    </a>
                 </div>
-            </div>
+                <?php endif; ?>
+                <div class="activity-feature-image">
+                    <img src="<?= htmlspecialchars($act['image'], ENT_QUOTES, 'UTF-8'); ?>"
+                        alt="<?= htmlspecialchars($act['title'], ENT_QUOTES, 'UTF-8'); ?>" loading="lazy">
+                </div>
+            </article>
             <?php endforeach; ?>
-            <?php else: ?>
-            <div class="col-12 text-center py-4">
-                <p class="text-muted">ບໍ່ມີຂໍ້ມູນກິດຈະກຳໃນຂະນະນີ້</p>
-            </div>
-            <?php endif; ?>
+        </div>
+        <div class="activities-more-action">
+            <a class="activities-more-link" href="Activities.php">
+                Read More <i class="fa fa-arrow-right" aria-hidden="true"></i>
+            </a>
         </div>
     </div>
 </section>
@@ -316,128 +516,33 @@ include 'header.php';
 </section>
 
 
-<!-- Contact Section -->
-<section class="contact_section layout_padding" style="background-color: #0b2519; color: #ffffff;">
-    <div class="container">
-        <div class="heading_container text-center mb-5">
-            <h2 style="color: #ffffff;">Maps</h2>
-        </div>
-
-        <div class="row align-items-center">
-            <div class="col-md-6 mb-4 mb-md-0">
-                <div class="map_container"
-                    style="border-radius: 10px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.3);">
-                    <iframe
-                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3794.780105905844!2d102.63083141024914!3d17.98896468512677!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x312467e8718562d9%3A0x6e84fd1e2e235b0e!2sLogos%20Institute%20of%20Foreign%20Language%20(LIFL)!5e0!3m2!1sth!2sla!4v1773388410171!5m2!1sth!2sla"
-                        width="100%" height="320" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
-                </div>
-            </div>
-
-            <div class="col-md-6 pl-lg-5">
-                <div class="contact_info">
-                    <h3 style="font-weight: 700; font-size: 1.5rem; margin-bottom: 20px; color: #ffffff;">
-                        CONTACT US
-                    </h3>
-
-                    <div class="d-flex align-items-start mb-3">
-                        <i class="fa fa-map-marker" aria-hidden="true"
-                            style="font-size: 1.5rem; margin-right: 15px; width: 20px; text-align: center; color: #ffffff;"></i>
-                        <div>
-                            <strong style="display: block;">Location: Phonpanao Road</strong>
-                            <span>Hom 15 Phonphanao, Vientiane, Laos</span>
-                        </div>
-                    </div>
-
-                    <div class="d-flex align-items-center mb-3">
-                        <i class="fa fa-phone" aria-hidden="true"
-                            style="font-size: 1.3rem; margin-right: 15px; width: 20px; text-align: center; color: #ffffff;"></i>
-                        <div>
-                            <span>Call : +8562092362524</span>
-                        </div>
-                    </div>
-
-                    <div class="d-flex align-items-center mb-4">
-                        <i class="fa fa-envelope" aria-hidden="true"
-                            style="font-size: 1.2rem; margin-right: 15px; width: 20px; text-align: center; color: #ffffff;"></i>
-                        <div>
-                            <span>Email : logosinstitute.fl.edu@gmail.com</span>
-                        </div>
-                    </div>
-
-                    <div class="social_box mt-4 pt-3" style="border-top: 1px solid rgba(255,255,255,0.2);">
-                        <h5 style="font-weight: 700; font-size: 1.1rem; margin-bottom: 15px; letter-spacing: 1px;">LOGOS
-                            INSTITUTE</h5>
-                        <div class="d-flex gap-2">
-                            <a href="#"
-                                style="width: 38px; height: 38px; border: 1.5px solid #ffffff; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #ffffff; text-decoration: none; margin-right: 10px;">
-                                <i class="fa fa-facebook" aria-hidden="true"></i>
-                            </a>
-                            <a href="#"
-                                style="width: 38px; height: 38px; border: 1.5px solid #ffffff; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #ffffff; text-decoration: none; margin-right: 10px;">
-                                <i class="fa fa-twitter" aria-hidden="true"></i>
-                            </a>
-                            <a href="#"
-                                style="width: 38px; height: 38px; border: 1.5px solid #ffffff; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #ffffff; text-decoration: none; margin-right: 10px;">
-                                <i class="fa fa-linkedin" aria-hidden="true"></i>
-                            </a>
-                            <a href="#"
-                                style="width: 38px; height: 38px; border: 1.5px solid #ffffff; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #ffffff; text-decoration: none;">
-                                <i class="fa fa-instagram" aria-hidden="true"></i>
-                            </a>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-
-        </div>
-    </div>
-</section>
-
-
-
 <!-- Footer Section -->
-<footer class="footer_section" style="background-color: #ffffff; color: #333333; padding: 15px 0;">
-    <div class="container text-center">
-        <p style="margin: 0; font-size: 0.9rem; color: #555555;">
-            &copy; <?php echo date('Y'); ?> Logos institute
-        </p>
-    </div>
-</footer>
+<?php include __DIR__ . "/footer.php"; ?>
 
-<!-- Poster Modal -->
-<div id="posterModal" class="popup-modal">
+<!-- Holiday Announcement Modal -->
+<div id="holidayNoticeModal" class="popup-modal" role="dialog" aria-modal="true"
+    aria-labelledby="holidayNoticeModalTitle">
     <div class="popup-content">
-        <button type="button" class="popup-close" onclick="closePosterModal()" aria-label="Close poster">&times;</button>
-        <img src="images/Festival 7-02.png" alt="LOGOS FESTIVAL" class="popup-poster-img">
-        <div class="popup-actions mt-3">
-            <a href="Festival.php" class="btn btn-primary">Read More</a>
+        <button type="button" class="popup-close" onclick="closeHolidayNoticeModal()"
+            aria-label="Close announcement">&times;</button>
+        <h2 id="holidayNoticeModalTitle"><?= htmlspecialchars($holidayNoticeTitle, ENT_QUOTES, 'UTF-8'); ?></h2>
+        <p><?= nl2br(htmlspecialchars($holidayNoticeBody, ENT_QUOTES, 'UTF-8')); ?></p>
+        <?php if (!empty($holidayNoticeImages)): ?>
+        <div class="holiday-notice-modal-images">
+            <?php foreach ($holidayNoticeImages as $image): ?>
+            <img src="<?= htmlspecialchars($image, ENT_QUOTES, 'UTF-8'); ?>"
+                alt="<?= htmlspecialchars($holidayNoticeTitle, ENT_QUOTES, 'UTF-8'); ?>" class="popup-poster-img">
+            <?php endforeach; ?>
         </div>
+        <?php endif; ?>
     </div>
 </div>
 
 <!-- CDN Scripts -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
 
 <script>
 document.addEventListener("DOMContentLoaded", function() {
-    if (window.jQuery && jQuery.fn.owlCarousel) {
-        jQuery(".course_owl-carousel").owlCarousel({
-            loop: true,
-            margin: 20,
-            nav: false,
-            dots: true,
-            autoplay: true,
-            autoplayTimeout: 3000,
-            responsive: {
-                0: { items: 1 },
-                600: { items: 2 },
-                1000: { items: 3 }
-            }
-        });
-    }
-
     const navToggle = document.querySelector(".navbar-toggler");
     const navMenu = document.getElementById("navbarSupportedContent");
     if (navToggle && navMenu) {
@@ -459,17 +564,16 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 });
 
-function openPosterModal(event) {
-    event.preventDefault();
-    document.getElementById('posterModal').style.display = 'flex';
+function openHolidayNoticeModal() {
+    document.getElementById('holidayNoticeModal').style.display = 'flex';
 }
 
-function closePosterModal() {
-    document.getElementById('posterModal').style.display = 'none';
+function closeHolidayNoticeModal() {
+    document.getElementById('holidayNoticeModal').style.display = 'none';
 }
 
 window.onclick = function(event) {
-    var modal = document.getElementById('posterModal');
+    var modal = document.getElementById('holidayNoticeModal');
     if (event.target == modal) {
         modal.style.display = "none";
     }
@@ -477,7 +581,7 @@ window.onclick = function(event) {
 
 document.addEventListener("keydown", function(event) {
     if (event.key === "Escape") {
-        closePosterModal();
+        closeHolidayNoticeModal();
     }
 });
 

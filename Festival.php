@@ -374,11 +374,7 @@
   <!-- end info_section -->
 
   <!-- footer section -->
-  <footer class="footer_section">
-    <div class="container">
-      <p>&copy; <span id="displayYear"></span> Logos institute</p>
-    </div>
-  </footer>
+  <?php include __DIR__ . "/footer.php"; ?>
 
   <!-- Modal 1: English Speaking -->
   <div class="modal fade" id="docModal1" tabindex="-1" role="dialog" aria-hidden="true">
